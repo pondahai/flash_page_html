@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>閃爍畫面產生器</title>
+  <style>
+    body {
+      background-color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <input type="number" id="frequency" value="7.83">
+  <button id="start">開始閃爍</button>
+  <button id="stop">停止閃爍</button>
+  <select id="waveType">
+    <option value="square">方波</option>
+    <option value="sine">正弦波</option>
+    <option value="random">隨機</option>
+  </select>  
+  <script>
+const frequencyInput = document.getElementById('frequency');
+const startButton = document.getElementById('start');
+const stopButton = document.getElementById('stop');
+const waveTypeSelect = document.getElementById('waveType'); // 新增選擇器
+
+let intervalId = null;
+
+function updateBackgroundColor(type) {
+    switch (type) {
+        case 'square':
+            document.body.style.backgroundColor = document.body.style.backgroundColor === 'black' ? 'white' : 'black';
+            break;
+        case 'sine':
+            // 假設顏色變化範圍為白色到黑色
+            const value = Math.sin(Date.now() / 100); // 可以調整頻率
+            const color = `rgb(${255 * (1 - value)}, ${255 * (1 - value)}, ${255 * (1 - value)})`;
+            document.body.style.backgroundColor = color;
+            break;
+        case 'random':
+            // 隨機產生 RGB 值
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+               
+break;
+    }
+}
+
+startButton.addEventListener('click', () => {
+  clearInterval(intervalId); // 在設置新間隔前，先清除舊的間隔
+  const frequency = parseInt(frequencyInput.value);
+  if (isNaN(frequency) || frequency <= 0) {
+    alert('請輸入正確的頻率!');
+    return;
+  }
+  const waveType = waveTypeSelect.value;
+  intervalId = setInterval(() => {
+   // document.body.style.backgroundColor = document.body.style.backgroundColor === 'black' ? 'white' : 'black';
+   updateBackgroundColor(waveType);
+  }, 1000 / frequency);
+});
+
+stopButton.addEventListener('click', () => {
+  clearInterval(intervalId);
+  intervalId = null;
+  document.body.style.backgroundColor = 'white';
+});
+  </script>
+</body>
+</html>
